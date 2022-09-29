@@ -14,28 +14,59 @@ public class SocialDistance {
      */
 
     public static char [][]seatingPeople(char [][] layout){
-        char [][] resultLayout = layout;
         for(int i = 0; i< layout.length;i++ ){
             for(int j = 0; j < layout[i].length;i++){
                 if(layout[i][j] == 'A'){
                     int z = i-1;
-                    int y = j+1;
                     boolean found = true;
-                    while(z < layout.length && found){
-                        /*escribir luego*/
+                    while(z < z +3 && found){
+                        if(z >= 0 && z < layout.length){
+                            int y = j+1;
+                            while (y <= y +3 && found ){
+                                if(y >= 0 && y < layout[i].length){
+                                    if(layout[z][y] == '#'){
+                                        found = false;
+                                    }
+                                }
+                                y++;
+                            }
+                        }
+                        z++;
+
+                    }
+                    if(found){
+                        layout[i][j] = '#';
+                    }
+                }
+                if(layout[i][j] == '#'){
+                    int numStundents = 0;
+                    int z = i-1;
+                    boolean found = false;
+                    while(z < z +3 && !found){
+                        if(z >= 0 && z < layout.length){
+                            int y = j+1;
+                            while (y <= y +3 && !found ){
+                                if(y >= 0 && y < layout[i].length){
+                                    if(layout[z][y] == '#' && z != i && j != y){
+                                        numStundents++;
+                                        if(numStundents == 4){
+                                            found= true;
+                                        }
+                                    }
+                                }
+                                y++;
+                            }
+                        }
+                        z++;
+
+                    }
+                    if(found){
+                        layout[i][j] = 'A';
                     }
                 }
             }
         }
-        return resultLayout;
+        return layout;
     }
 
-    public boolean checkToSit(char[][] layout, int i, int j){
-
-        if(layout[i-1][j+1] != 'A'){
-            return true;
-        }else{
-            return false
-        }
-    }
 }
