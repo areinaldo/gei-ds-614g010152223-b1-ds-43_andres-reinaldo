@@ -14,58 +14,85 @@ public class SocialDistance {
      */
 
     public static char [][]seatingPeople(char [][] layout){
-        for(int i = 0; i< layout.length;i++ ){
-            for(int j = 0; j < layout[i].length;i++){
+        for(int i = 0; i < layout.length-1 ; i++){
+           if(layout[i].length != layout[i+1].length){
+               throw new IllegalArgumentException();
+           }
+       }
+        for (int i = 0; i < layout.length; i++){
+            for (int j = 0; j < layout[i].length;j++){
                 if(layout[i][j] == 'A'){
-                    int z = i-1;
-                    boolean found = true;
-                    while(z < z +3 && found){
-                        if(z >= 0 && z < layout.length){
-                            int y = j+1;
-                            while (y <= y +3 && found ){
-                                if(y >= 0 && y < layout[i].length){
-                                    if(layout[z][y] == '#'){
-                                        found = false;
-                                    }
-                                }
-                                y++;
-                            }
-                        }
-                        z++;
-
-                    }
-                    if(found){
-                        layout[i][j] = '#';
-                    }
+                    layout[i][j] = '#';
                 }
-                if(layout[i][j] == '#'){
-                    int numStundents = 0;
-                    int z = i-1;
-                    boolean found = false;
-                    while(z < z +3 && !found){
-                        if(z >= 0 && z < layout.length){
-                            int y = j+1;
-                            while (y <= y +3 && !found ){
-                                if(y >= 0 && y < layout[i].length){
-                                    if(layout[z][y] == '#' && z != i && j != y){
-                                        numStundents++;
-                                        if(numStundents == 4){
-                                            found= true;
+            }
+        }
+        boolean stop = false;
+        while (!stop){
+            for (int i = 0; i < layout.length;i++){
+                for (int j = 0; j < layout[i].length;j++){
+                    if(layout[i][j] == '#'){
+                        int numStundents = 0;
+                        int z = i-1;
+                        boolean found = false;
+                        while(z < (i-1) +3 && !found){
+                            if(z >= 0 && z < layout.length){
+                                int y = j-1;
+                                while (y <= (j-1) +3 && !found ){
+                                    if(y >= 0 && y < layout[i].length){
+                                        if(layout[z][y] == '#' && z != i && j != y){
+                                            numStundents++;
+                                            if(numStundents == 4){
+                                                found= true;
+                                            }
                                         }
                                     }
+                                    y++;
                                 }
-                                y++;
                             }
-                        }
-                        z++;
+                            z++;
 
+                        }
+                        if(found){
+                            layout[i][j] = 'A';
+                            stop = false;
+                        }else {
+                            stop = true;
+                        }
                     }
-                    if(found){
-                        layout[i][j] = 'A';
+                }
+            }
+            for(int i = 0; i< layout.length;i++ ){
+                for(int j = 0; j < layout[i].length;j++){
+                    if(layout[i][j] == 'A'){
+                        int z = i-1;
+                        boolean found = true;
+                        while(z < (i-1) +3 && found){
+                            if(z >= 0 && z < layout.length){
+                                int y = j-1;
+                                while (y < (j-1) +3 && found ){
+                                    if(y >= 0 && y < layout[i].length){
+                                        if(layout[z][y] == '#'){
+                                            found = false;
+                                        }
+                                    }
+                                    y++;
+                                }
+                            }
+                            z++;
+
+                        }
+                        if(found){
+                            layout[i][j] = '#';
+                            stop = false;
+                        }else {
+                            stop = true;
+                        }
                     }
                 }
             }
         }
+
+
         return layout;
     }
 
