@@ -1,6 +1,55 @@
 package e2;
 
 public class SocialDistance {
+
+    /**
+     * Given a layout copy the content in another layout with the same length
+     * @param layout the layout to copy
+     * @return the result layout
+     */
+    static char[][] copyArray (char [][] layout){
+        char [][] resultLayout= new char[layout.length][layout[0].length];
+        for(int i = 0; i < layout.length;i++){
+            for (int j = 0 ; j < layout[i].length;j++){
+                if(layout[i][j] == 'A'){
+                    resultLayout[i][j] = 'A';
+                }
+                if(layout[i][j] == '#'){
+                    resultLayout[i][j] = '#';
+                }
+                if(layout[i][j] == '.'){
+                    resultLayout[i][j] = '.';
+                }
+            }
+        }
+        return resultLayout;
+    }
+
+    /**
+     * Given a layout say that if its valid or not
+     * @param layaout the layout to check
+     * @return true if it's valid, false it's not
+     */
+    public static boolean isInvalid(char[][] layaout){
+        if(layaout == null){
+            return false;
+        }
+        for(int i = 0; i < layaout.length-1;i++){
+            if(layaout[i].length != layaout[i+1].length){
+                return false;
+            }
+        }
+        for (char[] chars : layaout) {
+            for (char aChar : chars) {
+                if (aChar != '.' && aChar != 'A') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
     /**
      * Given the layout of a class with available sites marked with an ’A’ and
      * invalid sites marked with a ’. ’, returns the resulting layout with the
@@ -14,20 +63,24 @@ public class SocialDistance {
      */
 
     public static char [][]seatingPeople(char [][] layout){
-        for(int i = 0; i < layout.length-1 ; i++){
-           if(layout[i].length != layout[i+1].length){
-               throw new IllegalArgumentException();
-           }
-       }
-        for (int i = 0; i < layout.length; i++){
-            for (int j = 0; j < layout[i].length;j++){
+        if (!isInvalid(layout)){
+            throw new IllegalArgumentException("The layout is invalid");
+        }
+
+        for(int i = 0; i < layout.length;i++){
+            for (int j = 0; j < layout[0].length;j++){
                 if(layout[i][j] == 'A'){
                     layout[i][j] = '#';
                 }
             }
         }
-        boolean stop = false;
-        while (!stop){
+        char [][] resultLayout;
+        resultLayout = copyArray(layout);
+       boolean stop = false;
+       while (!stop ){
+
+
+
             for (int i = 0; i < layout.length;i++){
                 for (int j = 0; j < layout[i].length;j++){
                     if(layout[i][j] == '#'){
@@ -37,9 +90,9 @@ public class SocialDistance {
                         while(z < (i-1) +3 && !found){
                             if(z >= 0 && z < layout.length){
                                 int y = j-1;
-                                while (y <= (j-1) +3 && !found ){
+                                while (y < (j-1) +3 && !found ){
                                     if(y >= 0 && y < layout[i].length){
-                                        if(layout[z][y] == '#' && z != i && j != y){
+                                        if(layout[z][y] == '#' && (z != i || j != y)){
                                             numStundents++;
                                             if(numStundents == 4){
                                                 found= true;
@@ -53,26 +106,43 @@ public class SocialDistance {
 
                         }
                         if(found){
-                            layout[i][j] = 'A';
-                            stop = false;
-                        }else {
-                            stop = true;
+                            resultLayout[i][j] = 'A';
                         }
                     }
                 }
             }
+
+            /*
+            stop es true para que si en caso de que al comprobar si son iguales las matrices entonces termine el bucle while
+            en caso de que no, stop sigue false y copia el contenido de la matriz resultLayout a layout
+             */
+            stop = true;
+            for(int i = 0; i < layout.length;i++){
+                for (int j = 0;j < layout[i].length;j++){
+                    if (layout[i][j] != resultLayout[i][j]) {
+                        stop = false;
+                        break;
+                    }
+                }
+            }
+            if(!stop){
+                layout = copyArray(resultLayout);
+            }
+
+
+
             for(int i = 0; i< layout.length;i++ ){
                 for(int j = 0; j < layout[i].length;j++){
                     if(layout[i][j] == 'A'){
                         int z = i-1;
-                        boolean found = true;
-                        while(z < (i-1) +3 && found){
+                        boolean found = false;
+                        while(z < (i-1) +3 && !found){
                             if(z >= 0 && z < layout.length){
                                 int y = j-1;
-                                while (y < (j-1) +3 && found ){
+                                while (y < (j-1) +3 && !found ){
                                     if(y >= 0 && y < layout[i].length){
                                         if(layout[z][y] == '#'){
-                                            found = false;
+                                            found = true;
                                         }
                                     }
                                     y++;
@@ -81,19 +151,20 @@ public class SocialDistance {
                             z++;
 
                         }
-                        if(found){
-                            layout[i][j] = '#';
-                            stop = false;
-                        }else {
-                            stop = true;
+                        if(!found){
+                            resultLayout[i][j] = '#';
                         }
                     }
                 }
             }
+            layout = copyArray(resultLayout);
         }
 
 
         return layout;
     }
+
+
+
 
 }
