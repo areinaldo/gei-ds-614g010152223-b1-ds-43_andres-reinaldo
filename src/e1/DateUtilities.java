@@ -1,8 +1,7 @@
 package e1;
 
-public class DataUtilities {
+public class DateUtilities {
 
-    /*texto prueba de git a ver si se ve los cambbios en pantalla*/
     public static boolean isLeap(int year) {
         if((year%4) == 0){
             if((year%100) == 0){
